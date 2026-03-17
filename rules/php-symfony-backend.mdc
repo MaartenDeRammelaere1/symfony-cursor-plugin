@@ -1,0 +1,38 @@
+---
+description: PHP and Symfony backend coding standards — strict types, PSR-12, dependency injection, naming
+globs: "**/*.php"
+alwaysApply: false
+---
+
+You are an expert in PHP and Symfony and related web development technologies.
+
+## Core principles
+
+- Write concise, technical PHP with accurate examples. Prioritize SOLID principles and clean architecture.
+- Follow PHP and Symfony best practices for consistency, readability, and maintainability.
+- Prefer iteration and modularization over duplication. Use consistent, descriptive names for variables, methods, and classes.
+
+## PHP standards
+
+- Use **strict typing**: `declare(strict_types=1);` at the top of every PHP file.
+- Adhere to **PSR-12** (and PSR-1/PSR-4) for code style. Use PHP CS Fixer or your project’s code-style tool to enforce it.
+- Leverage modern PHP features where appropriate: **typed properties**, **constructor property promotion**, **readonly** classes and properties, **union and nullable types**, **match expressions**, **backed enums** for status/type fields.
+- Prefer **final** classes for services, handlers, DTOs, and response/representation objects to prevent unintended inheritance.
+- Use **explicit return types** and **parameter type hints** for all methods. Use `void` for procedures; use `return null;` when a function explicitly returns null and `return;` for void.
+- Use **constructor injection only** for dependencies. No property injection. Use Symfony’s `#[Autowire]` (or equivalent) for configuration parameters.
+- **Imports**: One `use` per class; order logically (framework/vendor, then project). Use fully qualified names for global exceptions (e.g. `\InvalidArgumentException`).
+- **Exceptions**: Use custom exception classes where they add value; suffix with `Exception`. Exception messages should start with a capital letter and end with a period; use `sprintf()` for interpolation. Use the framework’s exception handling and logging; use try-catch only for expected, recoverable cases.
+- **Time**: Prefer an injectable clock (or test double) for “now” in domain code rather than `new \DateTimeImmutable()` or `time()` so tests can control time.
+
+## Symfony standards
+
+- Follow **Symfony best practices**: thin controllers, business logic in services, use attributes for routing and security, dependency injection via constructor or method arguments.
+- Use **environment variables** for infrastructure configuration (e.g. database URL, API keys); use **parameters** for application behavior (e.g. feature flags, sender email). Use **secrets** for sensitive configuration.
+- Use **autowiring** and **autoconfiguration** for services. Prefer **private** services; access via DI, not `$container->get()`.
+- Use **Doctrine PHP attributes** for entity mapping. Use **short, prefixed parameter names** (e.g. `app.`) to avoid collisions.
+- **Naming**: PascalCase for class/file names; camelCase for methods, functions, and variables; SCREAMING_SNAKE_CASE for constants; snake_case for config keys, route names, and Twig variables. Suffix interfaces with `Interface`, traits with `Trait`, abstract classes with `Abstract`.
+
+## Documentation and structure
+
+- One class per file. Declare class properties before methods; public, then protected, then private. Keep controllers and services small and focused.
+- Add PHPDoc where it improves clarity or static analysis (e.g. `@param`, `@return`, generics). Do not remove existing PHPDoc or comments from code unless refactoring.

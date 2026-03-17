@@ -1,0 +1,26 @@
+---
+description: Doctrine entities and repositories — ORM attributes, UUIDs, timestamps, ORM vs DBAL
+globs: "**/*.php"
+alwaysApply: false
+---
+
+## Entities
+
+- Use **Doctrine ORM PHP attributes** for mapping: `#[ORM\Entity]`, `#[ORM\Table(name: '...')]`, `#[ORM\Column]`, `#[ORM\ManyToOne]`, `#[ORM\OneToMany]`, `#[ORM\JoinColumn]`. Set `repositoryClass` on the entity.
+- Organize entities under a clear **namespace** (e.g. `Entity\` or `Domain\*`). Prefer **immutable** design where the domain allows: readonly constructor arguments, minimal setters. Use setters only when the domain requires mutable state.
+- Use **PHP backed enums** for status and type fields; map to string or integer in the database via Doctrine types or attributes as per your setup.
+
+## Identifiers and timestamps
+
+- Prefer **UUIDs** (e.g. `Symfony\Component\Uid\Uuid`) for primary keys when you need stable, non-sequential IDs. Expose string IDs in the API (e.g. `->toRfc4122()`). For **composite keys**, use `#[ORM\Id]` on each part and appropriate `JoinColumn`.
+- For **timestamps** (e.g. created/updated), use an **injectable clock** in domain code (or a shared service) so tests can control time. Use `datetime_immutable` column type. Do not call `new \DateTimeImmutable()` or `time()` directly in entities.
+
+## Repositories
+
+- **ORM repositories**: Extend Doctrine’s `ServiceEntityRepository`. Use for loading **single entities** and **simple queries**. Keep query methods focused and named by intent (e.g. `findOneByEmail`, `findActive`).
+- **DBAL / query builder**: Use for **complex list queries**, **reporting**, and when you need raw SQL or query builder without full entity hydration. Implement a **list interface** (e.g. `findAll(filters, sort, pagination)`, `getPaginatorAdapter`, `getFilterValues`) so controllers and services stay decoupled from persistence details.
+- Do not put business logic in repositories; repositories are for data access only.
+
+## Migrations
+
+- Generate **migrations** via Doctrine Migrations (or your project’s migration tool) after entity changes. Do not hand-edit the database schema without a corresponding migration. Keep migrations reversible where practical.

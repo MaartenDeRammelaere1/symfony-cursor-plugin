@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": "./scripts/cs-fix.sh",
+        "matcher": ".*\\.php$"
+      }
+    ]
+  }
+}

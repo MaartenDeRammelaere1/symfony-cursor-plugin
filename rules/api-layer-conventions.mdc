@@ -1,0 +1,34 @@
+---
+description: REST API layer — thin controllers, services for logic, DTOs and response objects
+globs: "**/*.php"
+alwaysApply: false
+---
+
+## Controllers
+
+- Keep controllers **thin**: validate input, call a **service** (or handler), then build and return the HTTP response. No business logic or direct persistence in controllers.
+- Extend your framework’s base controller (e.g. Symfony’s `AbstractController`) for helpers (e.g. JSON response, 404/403 helpers). Use **attributes** for routing, caching, and security.
+- Use **dependency injection** to get services (constructor or action method arguments). Do not pull services from the container by name.
+- Return consistent error responses (e.g. JSON with message keys and appropriate status codes). Use the same helpers for 404, 403, and validation errors across the API.
+
+## Services (business logic)
+
+- Put all **business logic** in **service classes** (or “handlers”/“application services”). One service per aggregate or feature area. Services should be **final** and **readonly** where possible.
+- Services receive **DTOs** or value objects as input and return **entities** or **void**. They use the entity manager, repositories, and event dispatcher via constructor injection. Dispatch **domain or audit events** after persist/flush, not from controllers.
+- Use `assert()` only for **invariants** (e.g. “entity loaded from DB is non-null after find”). Never use assert for **user input**; validate input with the validator component.
+
+## Input (DTOs) and validation
+
+- Use **DTOs** (or Form/Request objects) for request input. Prefer **constructor-promoted readonly properties** and typed fields (e.g. `?string` for optional UUIDs).
+- Attach **validation constraints** to the DTO (or underlying object) so validation is reusable (API, forms, CLI). Use the Validator component; return validation errors as structured API responses with 422 or 400.
+- Validate **before** calling services. Use entity-existence or custom constraints for IDs and references; return 404 when a referenced entity is missing.
+
+## Output (responses and representations)
+
+- Use **response objects** or **API resources** that implement `JsonSerializable` and expose a **HTTP status code**. For lists, use a consistent structure (e.g. `items`, `total`, pagination fields).
+- Build **representation objects** (views/resources) from **entities** via a dedicated method (e.g. `createFromEntity(Entity $e): self`) so serialization stays in one place. Keep representation classes free of business logic.
+- Document the API (e.g. OpenAPI) from the same DTOs and response types where possible so docs stay in sync with code.
+
+## Lists and pagination
+
+- For list endpoints, use a **single DTO** for filters, sort, and pagination. Prefer a **repository interface** that returns a paginator adapter (e.g. Pagerfanta) and filter options. Use **DBAL** or query builder for complex list queries to avoid N+1 and keep controllers thin.

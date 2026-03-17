@@ -1,0 +1,17 @@
+---
+description: Run PHP, Composer, PHPStan, and code style tools via Ddev or Docker when the project uses them
+globs: "**/*.php"
+alwaysApply: false
+---
+
+# PHP in Ddev or Docker
+
+When the project uses **Ddev** or **Docker** for local PHP:
+
+- **Run PHP tools inside the container** so the same PHP version, extensions, and `vendor/` are used. Do not run `php`, `composer`, `vendor/bin/phpstan`, or `vendor/bin/php-cs-fixer` (or ECS) directly on the host unless the project is set up for that.
+- **Ddev**: Use `ddev composer ...`, `ddev php ...`, or custom Ddev commands (e.g. `ddev phpstan`) from the **repository root**. If the Composer root is a subdirectory (e.g. `backend/`), Ddev runs Composer there; run PHP binaries with that path, e.g. `ddev exec "php backend/bin/phpstan analyse"` or the project’s `ddev phpstan` command.
+- **Docker Compose**: Use `docker compose exec <service> ...` (e.g. `docker compose exec php php bin/phpstan analyse`) from the directory that contains `compose.yaml` / `docker-compose.yml`. Use the service name and working directory that match the project (often the app root or Composer root).
+- **Hooks and scripts**: Any script that runs PHPStan, PHP-CS-Fixer, or ECS should detect Ddev (e.g. `ddev describe` or a project script) and, when available, run the tool via `ddev exec ...` or a Ddev custom command so execution happens inside the container.
+- **Finding the Composer root**: If the repo has a subdirectory that contains `composer.json` (e.g. `backend/`), that is usually the Composer root; run `composer` and PHP binaries from that directory inside the container, or pass the correct path (e.g. `backend/bin/phpstan`).
+
+This keeps analysis and formatting consistent with CI and other environments that use the same container or PHP setup.
