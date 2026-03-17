@@ -80,13 +80,3 @@ The rules align with:
 - **Symfony**: [Symfony best practices](https://symfony.com/doc/current/best_practices.html), [Symfony coding standards](https://symfony.com/doc/current/contributing/code/standards.html), [Symfony conventions](https://symfony.com/doc/current/contributing/code/conventions.html).
 
 The plugin does not reference Laravel, project-specific namespaces, or custom folder layouts (e.g. api/app/common); it is intended for any Symfony + PHP REST backend.
-
-## Submitting to the Cursor directory
-
-- Ensure `plugin.json` has a unique **name** (lowercase, kebab-case), **description**, and optional **version**, **author**, **keywords**.
-- All rules, skills, agents, and commands include the required frontmatter.
-- To publish, go to [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish) and submit your repository link.
-
-## License
-
-MIT (or match your project license).
