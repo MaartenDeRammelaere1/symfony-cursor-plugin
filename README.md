@@ -43,10 +43,14 @@ Make the scripts executable (`chmod +x scripts/*.sh`) if your environment requir
 
 ## Plugin structure
 
+The plugin follows both [Cursor](https://cursor.com/docs/plugins) (`.cursor-plugin/`) and [Open Plugins](https://open-plugins.com/) (`.plugin/`) conventions. When you change the manifest, keep both in sync by running `./scripts/sync-manifest.sh`.
+
 ```
 symfony-plugin/
 ├── .cursor-plugin/
-│   └── plugin.json
+│   └── plugin.json       # Cursor manifest (source of truth)
+├── .plugin/
+│   └── plugin.json       # Open Plugins manifest (copy; sync via scripts/sync-manifest.sh)
 ├── rules/
 │   ├── php-symfony-backend.mdc
 │   ├── api-layer-conventions.mdc
@@ -67,8 +71,9 @@ symfony-plugin/
 ├── hooks/
 │   └── hooks.json
 ├── scripts/
-│   ├── cs-fix.sh       # ECS or PHP-CS-Fixer (Ddev-aware)
-│   └── phpstan.sh      # PHPStan (Ddev-aware)
+│   ├── cs-fix.sh         # ECS or PHP-CS-Fixer (Ddev-aware)
+│   ├── phpstan.sh       # PHPStan (Ddev-aware)
+│   └── sync-manifest.sh  # Sync .cursor-plugin/plugin.json → .plugin/plugin.json
 └── README.md
 ```
 

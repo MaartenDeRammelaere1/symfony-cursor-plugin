@@ -1,0 +1,25 @@
+{
+  "name": "symfony-api",
+  "version": "1.0.0",
+  "description": "Generic rules, skills, and agents for Symfony and PHP 8+ REST API backends: PSR-12, strict types, thin controllers, service/DTO/response layering, Doctrine ORM and validation best practices",
+  "author": {
+    "name": "Maarten De Rammelaere"
+  },
+  "keywords": [
+    "symfony",
+    "php",
+    "doctrine",
+    "api",
+    "rest",
+    "psr-12",
+    "validation",
+    "dto"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/your-org/symfony-plugin",
+  "rules": "rules/",
+  "skills": "skills/",
+  "agents": "agents/",
+  "commands": "commands/",
+  "hooks": "hooks/"
+}
